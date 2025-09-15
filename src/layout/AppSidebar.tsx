@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@/context/SidebarContext";
 import { LuLayoutDashboard, LuUsers } from "react-icons/lu";
+import { useAuth } from "./AuthContext";
 
 type NavItem = {
   name: string;
@@ -26,6 +27,7 @@ const navItems: NavItem[] = [
 ];
 
 const AppSidebar: FC = () => {
+  const { user } = useAuth();
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
 
@@ -40,7 +42,6 @@ const AppSidebar: FC = () => {
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Logo */}
       <div className={`py-8 flex ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"}`}>
         <Link href="/dashboard">
           {isExpanded || isHovered || isMobileOpen ? (
@@ -62,7 +63,6 @@ const AppSidebar: FC = () => {
         </Link>
       </div>
 
-      {/* Menu Items */}
       <nav className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
         <ul className="flex flex-col gap-4">
           {navItems.map((nav) => (
@@ -73,7 +73,6 @@ const AppSidebar: FC = () => {
                   ${!isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"}
                   ${isActive(nav.path)
                     ? "bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400"
-                    // Ganti 'menu-item-inactive' dengan class Tailwind biasa
                     : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
                   }`
                 }
