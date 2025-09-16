@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
             duration: 5000,
           }}
           containerStyle={{
-            zIndex: 9999,
+            zIndex: 99999999,
           }}
         />
       </ThemeProvider>

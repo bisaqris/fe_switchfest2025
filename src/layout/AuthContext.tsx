@@ -65,7 +65,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(false);
     window.location.href = '/auth/signin';
   };
-  // -------------------------
 
   if (!isMounted) {
     return null;

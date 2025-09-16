@@ -1,5 +1,3 @@
-// src/components/admin/UserForm.tsx
-
 import React, { useState, useEffect, FormEvent } from 'react';
 import apiClient from '@/lib/apiClient';
 import { toast } from 'react-hot-toast';
@@ -7,7 +5,6 @@ import Input from '@/components/form/input/InputField';
 import Label from '@/components/form/Label';
 import Button from '@/components/ui/button/Button';
 
-// Tipe User dari halaman utama
 type User = {
   id: string;
   name: string;
@@ -15,9 +12,9 @@ type User = {
 };
 
 interface UserFormProps {
-  user: User | null; // Data user untuk diedit, null jika menambah baru
-  onSuccess: () => void; // Fungsi yang dipanggil setelah submit berhasil
-  onClose: () => void; // Fungsi untuk menutup modal
+  user: User | null;
+  onSuccess: () => void;
+  onClose: () => void;
 }
 
 export default function UserForm({ user, onSuccess, onClose }: UserFormProps) {
@@ -51,6 +48,8 @@ export default function UserForm({ user, onSuccess, onClose }: UserFormProps) {
       onSuccess();
       onClose();
     } catch (error: any) {
+      console.log("WOYYY ERROR")
+      console.log(error.response?.data?.message)
       toast.error(error.response?.data?.message || 'Terjadi kesalahan.');
     } finally {
       setIsLoading(false);
