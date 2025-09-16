@@ -108,7 +108,7 @@ export default function SignInPage() {
                   Ingat saya
                 </Label>
               </div>
-              <Link href="/auth/reset-password" className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
+              <Link href="/auth/reset-password" className="text-sm font-medium text-brand-500 hover:underline ">
                 Lupa password?
               </Link>
             </div>
@@ -122,7 +122,7 @@ export default function SignInPage() {
 
           <p className="text-sm text-center text-gray-500 dark:text-gray-400">
             Belum punya akun?{' '}
-            <Link href="/auth/signup" className="font-medium text-blue-600 hover:underline dark:text-blue-500">
+            <Link href="/auth/signup" className="font-medium text-blue-600 hover:underline ">
               Sign Up
             </Link>
           </p>

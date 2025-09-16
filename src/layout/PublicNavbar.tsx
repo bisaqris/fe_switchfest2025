@@ -12,12 +12,12 @@ export default function PublicNavbar() {
         </Link>
         <div className="flex items-center gap-4">
           <Link href="/auth/signin" legacyBehavior>
-            <a className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <a className="px-4 py-2 outline-2 outline-[#284B63] hover:outline-[#3D6885] rounded-lg text-gray-600 dark:text-gray-300 hover:text-[#284B63] dark:hover:text-[#3D6885] transition-colors">
               Sign In
             </a>
           </Link>
           <Link href="/auth/signup" legacyBehavior>
-            <a className="px-4 py-2 text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition-colors">
+            <a className="px-4 py-2 text-white bg-[#284B63] rounded-lg shadow-md hover:bg-[#3D6885] transition-colors">
               Sign Up
             </a>
           </Link>
