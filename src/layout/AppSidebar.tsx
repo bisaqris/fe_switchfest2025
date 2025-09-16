@@ -1,10 +1,11 @@
 "use client";
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@/context/SidebarContext";
 import { LuLayoutDashboard, LuUsers } from "react-icons/lu";
+import { BsThreeDots } from "react-icons/bs";
 import { useAuth } from "./AuthContext";
 
 type NavItem = {
@@ -13,7 +14,7 @@ type NavItem = {
   path: string;
 };
 
-const navItems: NavItem[] = [
+const navItemsAdmin: NavItem[] = [
   {
     icon: <LuLayoutDashboard />,
     name: "Dashboard",
@@ -26,10 +27,41 @@ const navItems: NavItem[] = [
   },
 ];
 
+const navItemsUser: NavItem[] = [
+  {
+    icon: <LuLayoutDashboard />,
+    name: "Dashboard",
+    path: "/dashboard",
+  },
+];
+
 const AppSidebar: FC = () => {
   const { user } = useAuth();
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
+
+  const visibleNavItems = useMemo(() => {
+    if (user?.role === 'admin') {
+      return navItemsAdmin
+    }
+    console.log(user?.role)
+    if (user?.role === 'user') {
+      return navItemsUser
+    }
+  }, [user])
+
+  const renderMenuItems = (items: NavItem[]) => (
+    <ul className="flex flex-col gap-4">
+      {items.map((nav, index) => (
+        <li key={index}>
+          <Link href={nav.path} className={`flex items-center gap-4 p-3 rounded-lg transition-colors ${isActive(nav.path) ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}>
+            <span>{nav.icon}</span>
+            {(isExpanded || isHovered || isMobileOpen) && <span>{nav.name}</span>}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
 
   const isActive = (path: string) => pathname === path;
 
@@ -65,25 +97,12 @@ const AppSidebar: FC = () => {
 
       <nav className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
         <ul className="flex flex-col gap-4">
-          {navItems.map((nav) => (
-            <li key={nav.name}>
-              <Link
-                href={nav.path}
-                className={`flex items-center gap-4 p-3 rounded-lg transition-colors
-                  ${!isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"}
-                  ${isActive(nav.path)
-                    ? "bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400"
-                    : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                  }`
-                }
-              >
-                <span className="text-xl">{nav.icon}</span>
-                {(isExpanded || isHovered || isMobileOpen) && (
-                  <span className="font-medium">{nav.name}</span>
-                )}
-              </Link>
-            </li>
-          ))}
+          <div>
+            <h2 className={`mb-4 ...`}>
+              {isExpanded || isHovered || isMobileOpen ? "Menu" : <BsThreeDots />}
+            </h2>
+            {renderMenuItems(visibleNavItems ?? [])}
+          </div>
         </ul>
       </nav>
     </aside>

@@ -1,5 +1,3 @@
-// src/components/admin/UserForm.tsx
-
 import React, { useState, useEffect, FormEvent } from 'react';
 import apiClient from '@/lib/apiClient';
 import { toast } from 'react-hot-toast';
