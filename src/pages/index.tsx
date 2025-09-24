@@ -17,7 +17,7 @@ export default function LandingPage() {
             </Head>
 
             <div className="min-h-screen flex flex-col bg-white text-gray-800 items-center">
-                <main className="max-w-screen-2xl">
+                <main className="max-w-7xl flex flex-col gap-16">
                     <Hero/>
                     <OurProgram/>
                     <WhyEduPath/>
