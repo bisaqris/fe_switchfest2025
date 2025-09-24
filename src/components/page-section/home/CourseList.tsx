@@ -1,7 +1,6 @@
 import React from 'react'
 import CourseV2 from '@/components/card/course/CourseV2'
 
-
 export default function CourseList() {
   return (
     <>
