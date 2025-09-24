@@ -27,6 +27,19 @@ const navItemsAdmin: NavItem[] = [
   },
 ];
 
+const navItemsHr: NavItem[] = [
+  {
+    icon: <LuLayoutDashboard />,
+    name: "Dashboard",
+    path: "/dashboard",
+  },
+  {
+    icon: <LuUsers />,
+    name: "Users",
+    path: "/dashboard/users",
+  },
+];
+
 const navItemsUser: NavItem[] = [
   {
     icon: <LuLayoutDashboard />,
@@ -45,6 +58,9 @@ const AppSidebar: FC = () => {
       return navItemsAdmin
     }
     console.log(user?.role)
+    if (user?.role === 'hr') {
+      return navItemsHr
+    }
     if (user?.role === 'user') {
       return navItemsUser
     }

@@ -1,14 +1,16 @@
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import apiClient from '@/lib/apiClient';
 import { toast } from 'react-hot-toast';
 import Input from '@/components/form/input/InputField';
 import Label from '@/components/form/Label';
 import Button from '@/components/ui/button/Button';
+import Select from '@/components/form/Select';
 
 type User = {
   id: string;
   name: string;
   email: string;
+  role: string;
 };
 
 interface UserFormProps {
@@ -18,20 +20,31 @@ interface UserFormProps {
 }
 
 export default function UserForm({ user, onSuccess, onClose }: UserFormProps) {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', role: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const isEditing = user !== null;
 
   useEffect(() => {
     if (isEditing) {
-      setFormData({ name: user.name, email: user.email, password: '' });
+      setFormData({ name: user.name, email: user.email, role: user.role, password: '' });
     }
   }, [user, isEditing]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
+
+  const handleChangeSelect = (roleValue: string) => {
+    setFormData(prev => ({ ...prev, role: roleValue }));
+  };
+
+  const roleOptions = [
+    { value: 'admin', label: 'Admin' },
+    { value: 'user', label: 'User' },
+    { value: 'hr', label: 'HR' },
+  ];
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -39,7 +52,7 @@ export default function UserForm({ user, onSuccess, onClose }: UserFormProps) {
 
     try {
       if (isEditing) {
-        await apiClient.patch(`/users/${user.id}`, { name: formData.name, email: formData.email });
+        await apiClient.patch(`/users/${user.id}`, { name: formData.name, email: formData.email, role: formData.role });
         toast.success('Pengguna berhasil diperbarui!');
       } else {
         await apiClient.post('/users', formData);
@@ -75,6 +88,12 @@ export default function UserForm({ user, onSuccess, onClose }: UserFormProps) {
             Password {isEditing && <span className="text-sm text-gray-400">(Kosongkan jika tidak ingin diubah)</span>}
           </Label>
           <Input id="password" name="password" type="password" defaultValue={formData.password} onChange={handleChange} required={!isEditing} />
+        </div>
+        <div className="sm:col-span-2">
+          <Label htmlFor="role">
+            Role
+          </Label>
+          <Select id="role" name="role" defaultValue={formData.role} options={roleOptions} onChange={handleChangeSelect} required/>
         </div>
       </div>
       <div className="flex items-center justify-end w-full gap-3 mt-6">
