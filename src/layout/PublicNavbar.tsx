@@ -5,12 +5,12 @@ import Image from 'next/image';
 export default function PublicNavbar() {
   return (
     <header className="sticky top-0 z-50 w-full bg-white/80  backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
-      <nav className="container mx-auto flex justify-between items-center px-4 py-4 sm:px-6 lg:px-8">
+      <nav className="container mx-auto flex justify-between items-center px-4 py-4 sm:px-6 lg:px-24">
         <div className='flex gap-x-2'>
           <Image src="/images/brand/logo.svg" alt="" width={32} height={32} className='' />
           <Link href="/" legacyBehavior>
             <a className="text-2xl font-bold text-brand-500 dark:text-white">
-              SwitchFest
+              Edupath
             </a>
           </Link>
         <div className='flex items-center gap-x-6 px-8'>
