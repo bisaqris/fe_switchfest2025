@@ -49,6 +49,7 @@ export default function UsersPage() {
   };
 
   const handleDeleteUser = async (userId: string) => {
+    console.log(userId);
     if (window.confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
       try {
         await apiClient.delete(`/users/${userId}`);
@@ -82,7 +83,6 @@ export default function UsersPage() {
           </button>
         </div>
 
-        {/* Tabel Pengguna */}
         <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
           <div className="max-w-full overflow-x-auto">
             <table className="min-w-full">

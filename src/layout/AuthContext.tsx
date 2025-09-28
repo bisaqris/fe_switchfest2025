@@ -27,7 +27,6 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null);
 

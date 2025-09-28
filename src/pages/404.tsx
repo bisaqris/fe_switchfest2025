@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import GridShape from "@/components/common/GridShape";
+import { ReactElement } from "react";
 
 export default function Custom404() {
   return (
@@ -41,3 +42,7 @@ export default function Custom404() {
     </div>
   );
 }
+
+Custom404.getLayout = function getLayout(page: ReactElement) {
+  return page;
+};
