@@ -1,43 +1,22 @@
-"use client";
-import React, { useState } from "react";
-import ComponentCard from "../../common/ComponentCard";
-import TextArea from "../input/TextArea";
-import Label from "../Label";
+import React, { FC } from "react";
 
-export default function TextAreaInput() {
-  const [message, setMessage] = useState("");
-  const [messageTwo, setMessageTwo] = useState("");
-  return (
-    <ComponentCard title="Textarea input field">
-      <div className="space-y-6">
-        {/* Default TextArea */}
-        <div>
-          <Label>Description</Label>
-          <TextArea
-            value={message}
-            onChange={(value) => setMessage(value)}
-            rows={6}
-          />
-        </div>
-
-        {/* Disabled TextArea */}
-        <div>
-          <Label>Description</Label>
-          <TextArea rows={6} disabled />
-        </div>
-
-        {/* Error TextArea */}
-        <div>
-          <Label>Description</Label>
-          <TextArea
-            rows={6}
-            value={messageTwo}
-            error
-            onChange={(value) => setMessageTwo(value)}
-            hint="Please enter a valid message."
-          />
-        </div>
-      </div>
-    </ComponentCard>
-  );
+interface TextareaProps extends React.ComponentPropsWithoutRef<'textarea'> {
+  className?: string;
 }
+
+const TextareaInput: FC<TextareaProps> = ({
+  className = "",
+  ...props
+}) => {
+  const textareaClasses = `w-full appearance-none rounded-lg border border-gray-300 px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${className}`;
+
+  return (
+    <textarea
+      className={textareaClasses}
+      rows={4}
+      {...props}
+    />
+  );
+};
+
+export default TextareaInput;

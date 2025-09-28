@@ -27,52 +27,77 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null);
 
+  const fetchAndSetUser = async (token: string) => {
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      const response = await apiClient.get(`/users/${decoded.userId}`);
+      setUser(response.data.data);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error("Token tidak valid, menghapus token.", error);
+      localStorage.removeItem('authToken');
+      setIsAuthenticated(false);
+      setUser(null);
+    }
+  };
+
+
   useEffect(() => {
-    setIsMounted(true);
+    console.log("AuthContext: useEffect dimulai.");
 
-    const loadUserFromToken = async () => {
-      const token = localStorage.getItem('authToken');
-      if (token) {
-        try {
-          const decoded = jwtDecode<JwtPayload>(token);
-          const userId = decoded.userId;
+    const initializeAuth = async () => {
+      console.log("AuthContext: initializeAuth dijalankan.");
+      try {
+        const token = localStorage.getItem('authToken');
 
-          const response = await apiClient.get(`/users/${userId}`);
-
-          setUser(response.data.data);
-          setIsAuthenticated(true);
-        } catch (error) {
-          console.error("Token tidak valid atau gagal fetch user", error);
-          localStorage.removeItem('authToken');
+        if (!token) {
+          console.log("AuthContext: Tidak ada token, loading selesai.");
+          setLoading(false);
+          return;
         }
+
+        console.log("AuthContext: Token ditemukan, mencoba fetch user...");
+        const decoded = jwtDecode<JwtPayload>(token);
+        const response = await apiClient.get(`/users/${decoded.userId}`);
+
+        setUser(response.data.data);
+        setIsAuthenticated(true);
+        console.log("AuthContext: Fetch user berhasil.");
+
+      } catch (error) {
+        console.error("AuthContext: Terjadi error:", error);
+        localStorage.removeItem('authToken');
+        setIsAuthenticated(false);
+        setUser(null);
+      } finally {
+        console.log("AuthContext: Blok finally, loading selesai.");
+        setLoading(false);
       }
-      setLoading(false);
     };
-    loadUserFromToken();
+
+    initializeAuth();
   }, []);
 
-  const login = (token: string) => {
+  const login = async (token: string) => {
+    setLoading(true);
     localStorage.setItem('authToken', token);
-    setIsAuthenticated(true);
+    await fetchAndSetUser(token);
+    setLoading(false);
   };
 
   const logout = () => {
     localStorage.removeItem('authToken');
+    setUser(null);
     setIsAuthenticated(false);
     window.location.href = '/auth/signin';
   };
 
-  if (!isMounted) {
-    return null;
-  }
-
   return (
     <AuthContext.Provider value={{ isAuthenticated, user, loading, login, logout }}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

@@ -5,8 +5,11 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@/context/SidebarContext";
 import { LuLayoutDashboard, LuUsers } from "react-icons/lu";
+import { FiBookOpen } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
+import { RiCommunityLine } from "react-icons/ri";
 import { useAuth } from "./AuthContext";
+import { FaRegBuilding, FaUserTie } from "react-icons/fa6";
 
 type NavItem = {
   name: string;
@@ -24,6 +27,59 @@ const navItemsAdmin: NavItem[] = [
     icon: <LuUsers />,
     name: "Users",
     path: "/dashboard/users",
+  },
+  {
+    icon: <FiBookOpen />,
+    name: "Kursus",
+    path: "/dashboard/kursus",
+  },
+  {
+    icon: <RiCommunityLine />,
+    name: "Community",
+    path: "/dashboard/community",
+  },
+  {
+    icon: <FaRegBuilding />,
+    name: "Company",
+    path: "/dashboard/company",
+  },
+  {
+    icon: <FaUserTie />,
+    name: "Lowongan",
+    path: "/dashboard/lowongan",
+  },
+];
+
+const navItemsHr: NavItem[] = [
+  {
+    icon: <LuLayoutDashboard />,
+    name: "Dashboard",
+    path: "/dashboard",
+  },
+  {
+    icon: <LuUsers />,
+    name: "Users",
+    path: "/dashboard/users",
+  },
+  {
+    icon: <FiBookOpen />,
+    name: "Kursus",
+    path: "/dashboard/kursus",
+  },
+  {
+    icon: <RiCommunityLine />,
+    name: "Community",
+    path: "/dashboard/community",
+  },
+  {
+    icon: <FaRegBuilding />,
+    name: "Company",
+    path: "/dashboard/company",
+  },
+  {
+    icon: <FaUserTie />,
+    name: "Lowongan",
+    path: "/dashboard/lowongan",
   },
 ];
 
@@ -45,6 +101,9 @@ const AppSidebar: FC = () => {
       return navItemsAdmin
     }
     console.log(user?.role)
+    if (user?.role === 'hr') {
+      return navItemsHr
+    }
     if (user?.role === 'user') {
       return navItemsUser
     }

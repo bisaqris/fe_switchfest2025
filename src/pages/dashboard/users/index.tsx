@@ -10,18 +10,17 @@ type User = {
   id: string;
   name: string;
   email: string;
+  role: string;
 };
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // State untuk mengelola modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
   const { isOpen, openModal, closeModal } = useModal();
-  // Fungsi untuk mengambil data dari backend
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -50,6 +49,7 @@ export default function UsersPage() {
   };
 
   const handleDeleteUser = async (userId: string) => {
+    console.log(userId);
     if (window.confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
       try {
         await apiClient.delete(`/users/${userId}`);
@@ -83,7 +83,6 @@ export default function UsersPage() {
           </button>
         </div>
 
-        {/* Tabel Pengguna */}
         <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
           <div className="max-w-full overflow-x-auto">
             <table className="min-w-full">
@@ -91,6 +90,7 @@ export default function UsersPage() {
                 <tr>
                   <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-400">Nama</th>
                   <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-400">Email</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-400">Role</th>
                   <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-400">Aksi</th>
                 </tr>
               </thead>
@@ -99,6 +99,7 @@ export default function UsersPage() {
                   <tr key={user.id} className="dark:border-white/[0.05]">
                     <td className="px-4 py-4 whitespace-nowrap">{user.name}</td>
                     <td className="px-4 py-4 whitespace-nowrap">{user.email}</td>
+                    <td className="px-4 py-4 whitespace-nowrap capitalize">{user.role}</td>
                     <td className="px-4 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <button onClick={() => handleEditUser(user)} className="text-gray-500 hover:text-blue-500">

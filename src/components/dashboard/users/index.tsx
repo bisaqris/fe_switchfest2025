@@ -1,14 +1,17 @@
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import apiClient from '@/lib/apiClient';
 import { toast } from 'react-hot-toast';
 import Input from '@/components/form/input/InputField';
 import Label from '@/components/form/Label';
 import Button from '@/components/ui/button/Button';
+import Select from '@/components/form/Select';
 
 type User = {
   id: string;
   name: string;
   email: string;
+  role: string;
+  companyId?: string | null;
 };
 
 interface UserFormProps {
@@ -18,31 +21,56 @@ interface UserFormProps {
 }
 
 export default function UserForm({ user, onSuccess, onClose }: UserFormProps) {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', role: '', password: '', companyId: '' });
   const [isLoading, setIsLoading] = useState(false);
   const isEditing = user !== null;
 
   useEffect(() => {
     if (isEditing) {
-      setFormData({ name: user.name, email: user.email, password: '' });
+      setFormData({ name: user.name, email: user.email, role: user.role, password: '', companyId: user.companyId || '' });
+    } else {
+      setFormData({ name: '', email: '', role: '', password: '', companyId: '' });
     }
   }, [user, isEditing]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
+
+  const roleOptions = [
+    { value: 'admin', label: 'Admin' },
+    { value: 'user', label: 'User' },
+    { value: 'hr', label: 'HR' },
+  ];
+
+  console.log(user?.companyId)
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
+    const dataToSubmit: any = {
+      name: formData.name,
+      email: formData.email,
+      role: formData.role,
+    };
+
+    if (formData.password) {
+      dataToSubmit.password = formData.password;
+    }
+    if (isEditing && formData.companyId) {
+      dataToSubmit.companyId = formData.companyId;
+    }
+    
     try {
       if (isEditing) {
-        await apiClient.patch(`/users/${user.id}`, { name: formData.name, email: formData.email });
+        await apiClient.patch(`/users/${user.id}`, dataToSubmit);
         toast.success('Pengguna berhasil diperbarui!');
       } else {
-        await apiClient.post('/users', formData);
+        delete dataToSubmit.companyId;
+        await apiClient.post('/users', dataToSubmit);
         toast.success('Pengguna berhasil ditambahkan!');
       }
       onSuccess();
@@ -63,11 +91,11 @@ export default function UserForm({ user, onSuccess, onClose }: UserFormProps) {
       </h4>
       <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <Label htmlFor="name">Nama Lengkap</Label>
+          <Label htmlFor="name">Nama Lengkap*</Label>
           <Input id="name" name="name" type="text" placeholder="John Doe" defaultValue={formData.name} onChange={handleChange} required />
         </div>
         <div className="sm:col-span-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Email*</Label>
           <Input id="email" name="email" type="email" placeholder="you@example.com" defaultValue={formData.email} onChange={handleChange} required />
         </div>
         <div className="sm:col-span-2">
@@ -75,6 +103,27 @@ export default function UserForm({ user, onSuccess, onClose }: UserFormProps) {
             Password {isEditing && <span className="text-sm text-gray-400">(Kosongkan jika tidak ingin diubah)</span>}
           </Label>
           <Input id="password" name="password" type="password" defaultValue={formData.password} onChange={handleChange} required={!isEditing} />
+        </div>
+        {isEditing && (
+          <div className="sm:col-span-2">
+            <Label htmlFor="companyId">
+              Company ID (Opsional, untuk HR)
+            </Label>
+            <Input
+              id="companyId"
+              name="companyId"
+              type="text"
+              placeholder="Masukkan ID Perusahaan"
+              defaultValue={formData.companyId}
+              onChange={handleChange}
+            />
+          </div>
+        )}
+        <div className="sm:col-span-2">
+          <Label htmlFor="role">
+            Role
+          </Label>
+          <Select id="role" name="role" value={formData.role} options={roleOptions} onChange={handleChange} required />
         </div>
       </div>
       <div className="flex items-center justify-end w-full gap-3 mt-6">
