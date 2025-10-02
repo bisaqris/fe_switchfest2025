@@ -19,17 +19,17 @@ export default function PublicNavbar() {
             Home
           </a>
           </Link>
-          <Link href=""  legacyBehavior>
+          <Link href="/e-learning/"  legacyBehavior>
           <a className="text-brand-400 hover:scale-105 hover:text-brand-500 trasnition duration-100">
             E-Learning
           </a>
           </Link>
-          <Link href=""  legacyBehavior>
+          <Link href="/infoloker/"  legacyBehavior>
           <a className="text-brand-400 hover:scale-105 hover:text-brand-500 trasnition duration-100">
             Info Loker
           </a>
           </Link>
-          <Link href=""  legacyBehavior>
+          <Link href="/komunitas/"  legacyBehavior>
           <a className="text-brand-400 hover:scale-105 hover:text-brand-500 trasnition duration-100">
             Komunitas
           </a>
